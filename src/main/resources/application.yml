@@ -1,0 +1,61 @@
+spring:
+  main:
+    web-application-type: NONE
+  jackson:
+    serialization:
+      indent_output: true
+
+dollar-sign: "$"
+
+logging:
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%20.20t]){faint} %clr(%-50.50logger{49}){cyan} %clr(:){faint} %m%n%wEx"
+
+web:
+  game:
+    base-path: /index.php/1001
+    version-path: /Index/version
+  cdn:
+    base-path: /data
+
+client:
+  clients:
+    - region: us
+      game-host: http://gf-game.sunborngame.com
+      cdn-host: http://gfus-cdn.sunborngame.com
+      dump-version: 20702
+    - region: jp
+      game-host: http://gfjp-game.sunborngame.com
+      cdn-host: http://gfjp-cdn.sunborngame.com
+      dump-version: 20701
+    - region: kr
+      game-host: http://gf-game.girlfrontline.co.kr
+      cdn-host: http://gfkrcdn.imtxwy.com
+      dump-version: 20801
+    - region: tw
+      game-host: http://sn-game.txwy.tw
+      cdn-host: http://sncdn.imtxwy.com
+      dump-version: 20801
+
+file:
+  charset: UTF-8
+  base-path: ${java.io.tmpdir}/gfl-data-miner
+  json:
+    extension: .json
+  stc:
+    path: ${file.base-path}/${dollar-sign}{region}/stc
+    extract-path: ${file.base-path}/${dollar-sign}{region}/stc/extract
+    output-path: ${file.base-path}/out/${dollar-sign}{region}/stc
+    catchdata-encryption-key: c88d016d261eb80ce4d6e41a510d4048
+    catchdata-line-separator: "\n"
+    catchdata-output-path: ${file.stc.output-path}/catchdata
+    mapping-path: classpath:stc-mapping/${dollar-sign}{region}/*.json
+    skip:
+      - 5122.stc
+      - 5123.stc
+
+string-substitutor:
+  prefix: "${"
+  suffix: "}"
+  values:
+    region: region
