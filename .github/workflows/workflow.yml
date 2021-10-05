@@ -27,7 +27,7 @@ jobs:
       env:
         API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
       with:
-        source-directory: '/tmp/gfl-data-miner'
+        source-directory: 'target/gfl-data/out'
         destination-github-username: 'neko-gg'
         destination-repository-name: 'gfl-data'
         user-email: gfl-data-miner@neko.gg
