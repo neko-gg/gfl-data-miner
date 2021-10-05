@@ -39,7 +39,7 @@ client:
 
 file:
   charset: UTF-8
-  base-path: ${java.io.tmpdir}/gfl-data-miner
+  base-path: ./target/gfl-data
   json:
     extension: .json
   stc:
