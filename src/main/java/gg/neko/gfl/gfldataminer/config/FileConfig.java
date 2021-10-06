@@ -12,6 +12,7 @@ public class FileConfig {
 
     private String charset;
     private String basePath;
+    private String outputPath;
     private JsonFileConfig json;
     private StcFileConfig stc;
     private String dumpDataVersionPath;

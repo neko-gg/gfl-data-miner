@@ -14,6 +14,9 @@ public class StringSubstitutorConfig {
     @Data
     public static class StringSubstitutorValuesConfig {
         private String region;
+        private String clientVersion;
+        private String abVersion;
+        private String dataVersion;
     }
 
 }

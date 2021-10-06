@@ -8,6 +8,9 @@ import gg.neko.gfl.gfldataminer.service.file.BaseDirCleaner;
 import gg.neko.gfl.gfldataminer.service.file.FileLister;
 import gg.neko.gfl.gfldataminer.service.game.ClientVersionChecker;
 import gg.neko.gfl.gfldataminer.service.game.DumpDataVersionWriter;
+import gg.neko.gfl.gfldataminer.service.git.GitCloner;
+import gg.neko.gfl.gfldataminer.service.git.GitCopier;
+import gg.neko.gfl.gfldataminer.service.git.GitPusher;
 import gg.neko.gfl.gfldataminer.service.reactor.SchedulerProvider;
 import gg.neko.gfl.gfldataminer.service.stc.StcDownloader;
 import gg.neko.gfl.gfldataminer.service.stc.StcFileExtractor;
@@ -46,6 +49,9 @@ public class GFLDataMinerApplication {
     private final StcFileGroupProcessor stcFileGroupProcessor;
     private final StcFileSkipper stcFileSkipper;
     private final DumpDataVersionWriter dumpDataVersionWriter;
+    private final GitCloner gitCloner;
+    private final GitCopier gitCopier;
+    private final GitPusher gitPusher;
 
     public static void main(String[] args) {
         SpringApplication.run(GFLDataMinerApplication.class, args);
@@ -55,15 +61,19 @@ public class GFLDataMinerApplication {
     public CommandLineRunner commandLineRunner() {
         return args -> {
             baseDirCleaner.cleanBaseDir();
-
             List<ClientInfo> clients = clientConfig.getClients();
 
-            Flux.fromIterable(clients)
-                .flatMap(this::getLatestVersionAndProcessClientData)
-                .collectSortedList(Comparator.comparing(DumpDataVersion::getRegion))
-                .map(dumpDataVersionWriter::writeDumpDataVersion)
-                .subscribeOn(schedulerProvider.defaultScheduler())
-                .block();
+            gitCloner.cloneDataRepo()
+                     .zipWith(Flux.fromIterable(clients)
+                                  .flatMap(this::getLatestVersionAndProcessClientData)
+                                  .collectSortedList(Comparator.comparing(DumpDataVersion::getRegion))
+                                  .flatMap(dataVersions -> Mono.just(dumpDataVersionWriter.writeDumpDataVersion(dataVersions))
+                                                               .map(__ -> dataVersions)),
+                              (repository, dataVersion) -> dataVersion)
+                     .flatMap(dataVersions -> gitCopier.copyToDataRepo()
+                                                       .flatMap(__ -> gitPusher.pushToGitRepo(dataVersions)))
+                     .subscribeOn(schedulerProvider.defaultScheduler())
+                     .block();
         };
     }
 
@@ -82,13 +92,13 @@ public class GFLDataMinerApplication {
                    .filter(stcFileSkipper::shouldNotSkipStcFile)
                    .groupBy(stcFileGrouper)
                    .flatMap(stcFileGroup -> stcFileGroupProcessor.processStcFileGroup(clientInfo, stcFileGroup))
-                   .subscribeOn(schedulerProvider.defaultScheduler())
-                   .then(Mono.just(DumpDataVersion.builder()
-                                                  .region(clientInfo.getRegion())
-                                                  .dataVersion(latestDataVersion.getDataVersion())
-                                                  .abVersion(latestDataVersion.getAbVersion())
-                                                  .clientVersion(latestDataVersion.getClientVersion())
-                                                  .build()))
+                   .collectList()
+                   .map(__ -> DumpDataVersion.builder()
+                                             .region(clientInfo.getRegion())
+                                             .dataVersion(latestDataVersion.getDataVersion())
+                                             .abVersion(latestDataVersion.getAbVersion())
+                                             .clientVersion(latestDataVersion.getClientVersion())
+                                             .build())
                    .subscribeOn(schedulerProvider.defaultScheduler());
     }
 

@@ -40,12 +40,13 @@ client:
 file:
   charset: UTF-8
   base-path: ./target/gfl-data
+  output-path: ${file.base-path}/out
   json:
     extension: .json
   stc:
     path: ${file.base-path}/${dollar-sign}{region}/stc
     extract-path: ${file.base-path}/${dollar-sign}{region}/stc/extract
-    output-path: ${file.base-path}/out/${dollar-sign}{region}/stc
+    output-path: ${file.output-path}/${dollar-sign}{region}/stc
     catchdata-encryption-key: c88d016d261eb80ce4d6e41a510d4048
     catchdata-line-separator: "\n"
     catchdata-output-path: ${file.stc.output-path}/catchdata
@@ -53,10 +54,23 @@ file:
     skip:
       - 5122.stc
       - 5123.stc
-  dump-data-version-path: ${file.base-path}/out/latest-versions${file.json.extension}
+  dump-data-version-path: ${file.output-path}/latest-versions${file.json.extension}
+
+git:
+  remote-url: https://github.com/neko-gg/gfl-data.git
+  directory: ${file.base-path}/gfl-data-repo
+  git-directory: ${git.directory}/.git
+  token: ${API_TOKEN_GITHUB}
+  username: gfl-data-miner
+  email: gfl-data-miner@neko.gg
+  latest-versions-commit-message: update latest versions
+  region-commit-message: "[${dollar-sign}{region}] client ${dollar-sign}{client-version} | ab ${dollar-sign}{ab-version} | data ${dollar-sign}{data-version}"
 
 string-substitutor:
   prefix: "${"
   suffix: "}"
   values:
     region: region
+    client-version: client-version
+    ab-version: ab-version
+    data-version: data-version
