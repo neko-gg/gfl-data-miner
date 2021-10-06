@@ -20,3 +20,5 @@ jobs:
         run: mvn clean install -B
       - name: Run Spring Boot application
         run: mvn spring-boot:run -B
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
