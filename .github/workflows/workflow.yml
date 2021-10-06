@@ -3,6 +3,7 @@ name: gfl-data-miner
 on:
   schedule:
     - cron: '42 */6 * * *'
+  workflow_dispatch:
 
 jobs:
   gfl-data-miner-workflow:
