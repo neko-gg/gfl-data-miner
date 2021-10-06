@@ -2,10 +2,12 @@ package gg.neko.gfl.gfldataminer;
 
 import gg.neko.gfl.gfldataminer.config.ClientConfig;
 import gg.neko.gfl.gfldataminer.model.ClientInfo;
-import gg.neko.gfl.gfldataminer.model.ProcessedFileResult;
+import gg.neko.gfl.gfldataminer.model.DataVersion;
+import gg.neko.gfl.gfldataminer.model.DumpDataVersion;
 import gg.neko.gfl.gfldataminer.service.file.BaseDirCleaner;
 import gg.neko.gfl.gfldataminer.service.file.FileLister;
 import gg.neko.gfl.gfldataminer.service.game.ClientVersionChecker;
+import gg.neko.gfl.gfldataminer.service.game.DumpDataVersionWriter;
 import gg.neko.gfl.gfldataminer.service.reactor.SchedulerProvider;
 import gg.neko.gfl.gfldataminer.service.stc.StcDownloader;
 import gg.neko.gfl.gfldataminer.service.stc.StcFileExtractor;
@@ -21,6 +23,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import java.util.Comparator;
+import java.util.List;
 
 @Slf4j
 @AllArgsConstructor
@@ -39,6 +45,7 @@ public class GFLDataMinerApplication {
     private final StcFileGrouper stcFileGrouper;
     private final StcFileGroupProcessor stcFileGroupProcessor;
     private final StcFileSkipper stcFileSkipper;
+    private final DumpDataVersionWriter dumpDataVersionWriter;
 
     public static void main(String[] args) {
         SpringApplication.run(GFLDataMinerApplication.class, args);
@@ -49,27 +56,40 @@ public class GFLDataMinerApplication {
         return args -> {
             baseDirCleaner.cleanBaseDir();
 
-            var x = Flux.fromIterable(clientConfig.getClients())
-                        .flatMap(this::processClientInfo)
-                        .subscribeOn(schedulerProvider.defaultScheduler())
-                        .count()
-                        .block();
+            List<ClientInfo> clients = clientConfig.getClients();
 
-            System.out.println(x);
+            Flux.fromIterable(clients)
+                .flatMap(this::getLatestVersionAndProcessClientData)
+                .collectSortedList(Comparator.comparing(DumpDataVersion::getRegion))
+                .map(dumpDataVersionWriter::writeDumpDataVersion)
+                .subscribeOn(schedulerProvider.defaultScheduler())
+                .block();
         };
     }
 
-    private Flux<ProcessedFileResult> processClientInfo(ClientInfo clientInfo) {
+    private Mono<DumpDataVersion> getLatestVersionAndProcessClientData(ClientInfo clientInfo) {
         return latestDataVersionRetriever.getLatestDataVersion(clientInfo)
-                                         .flatMap(dataVersion -> clientVersionChecker.checkDataVersion(dataVersion, clientInfo))
-                                         .flatMap(dataVersion -> stcDownloader.downloadStc(clientInfo, dataVersion))
-                                         .flatMap(stcFile -> stcFileExtractor.extractStcFile(clientInfo, stcFile))
-                                         .flatMapMany(fileLister::listFiles)
-                                         .filter(stcFileSkipper::shouldNotSkipStcFile)
-                                         //.take(1)
-                                         .groupBy(stcFileGrouper)
-                                         .flatMap(stcFileGroup -> stcFileGroupProcessor.processStcFileGroup(clientInfo, stcFileGroup));
-                                         //.onErrorContinue((e, o) -> log.warn("{}", e.getMessage()));
+                                         .flatMap(dataVersion -> processClientData(clientInfo, dataVersion))
+                                         .subscribeOn(schedulerProvider.defaultScheduler());
+    }
+
+    private Mono<DumpDataVersion> processClientData(ClientInfo clientInfo, DataVersion latestDataVersion) {
+        return Mono.just(latestDataVersion)
+                   .flatMap(dataVersion -> clientVersionChecker.checkDataVersion(dataVersion, clientInfo))
+                   .flatMap(dataVersion -> stcDownloader.downloadStc(clientInfo, dataVersion))
+                   .flatMap(stcFile -> stcFileExtractor.extractStcFile(clientInfo, stcFile))
+                   .flatMapMany(fileLister::listFiles)
+                   .filter(stcFileSkipper::shouldNotSkipStcFile)
+                   .groupBy(stcFileGrouper)
+                   .flatMap(stcFileGroup -> stcFileGroupProcessor.processStcFileGroup(clientInfo, stcFileGroup))
+                   .subscribeOn(schedulerProvider.defaultScheduler())
+                   .then(Mono.just(DumpDataVersion.builder()
+                                                  .region(clientInfo.getRegion())
+                                                  .dataVersion(latestDataVersion.getDataVersion())
+                                                  .abVersion(latestDataVersion.getAbVersion())
+                                                  .clientVersion(latestDataVersion.getClientVersion())
+                                                  .build()))
+                   .subscribeOn(schedulerProvider.defaultScheduler());
     }
 
 }

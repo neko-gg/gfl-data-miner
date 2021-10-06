@@ -14,6 +14,7 @@ public class FileConfig {
     private String basePath;
     private JsonFileConfig json;
     private StcFileConfig stc;
+    private String dumpDataVersionPath;
 
     @Data
     public static class JsonFileConfig {

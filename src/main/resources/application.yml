@@ -53,6 +53,7 @@ file:
     skip:
       - 5122.stc
       - 5123.stc
+  dump-data-version-path: ${file.base-path}/out/latest-versions${file.json.extension}
 
 string-substitutor:
   prefix: "${"
