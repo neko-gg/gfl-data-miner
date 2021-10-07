@@ -26,6 +26,11 @@ public class JsonMapper {
     }
 
     @SneakyThrows
+    public <T> T fromJsonFile(File file, Class<T> valueType) {
+        return this.objectMapper.readValue(file, valueType);
+    }
+
+    @SneakyThrows
     public String toJsonString(Object value) {
         return objectMapper.writer(jsonPrettyPrinter.getPrettyPrinter()).writeValueAsString(value);
     }

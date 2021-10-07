@@ -9,6 +9,7 @@ public class WebConfig {
 
     private WebGameConfig game;
     private WebCdnConfig cdn;
+    private String latestVersionsUrl;
 
     @Data
     public static class WebGameConfig {

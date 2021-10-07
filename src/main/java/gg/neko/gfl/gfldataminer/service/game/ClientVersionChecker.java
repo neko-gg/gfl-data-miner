@@ -11,7 +11,7 @@ import java.text.MessageFormat;
 @Component
 public class ClientVersionChecker {
 
-    public Mono<DataVersion> checkDataVersion(DataVersion dataVersion, ClientInfo clientInfo) {
+    public Mono<DataVersion> checkDataVersion(ClientInfo clientInfo, DataVersion dataVersion) {
         if (clientInfo.getDumpVersion().compareTo(dataVersion.getClientVersion()) >= 0) {
             return Mono.just(dataVersion);
         }

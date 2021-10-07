@@ -9,14 +9,11 @@ import gg.neko.gfl.gfldataminer.service.web.FileDownloader;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
 import reactor.core.publisher.Mono;
 
 import java.io.File;
 import java.net.URI;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.function.Function;
 
 @Slf4j
@@ -34,16 +31,8 @@ public class StcDownloader {
         log.info("[{}] downloading stc file for {}", clientInfo.getRegion().toUpperCase(), dataVersion);
         String stcFileName = stcFileNameResolver.resolveStcFileName(dataVersion.getDataVersion());
         String interpolatedPath = stringInterpolator.interpolate(clientInfo, fileConfig.getStc().getPath());
-        Path destination = Paths.get(interpolatedPath, stcFileName);
-        Function<UriBuilder, URI> uriFunction = uriBuilder -> uriBuilder.path(webConfig.getCdn().getBasePath())
-                                                                        .path(stcFileName)
-                                                                        .build();
-
-        WebClient webClient = WebClient.builder()
-                                       .baseUrl(clientInfo.getCdnHost())
-                                       .build();
-
-        return fileDownloader.downloadFile(webClient, uriFunction, destination);
+        Function<UriBuilder, URI> uriFunction = uriBuilder -> uriBuilder.path(webConfig.getCdn().getBasePath()).path(stcFileName).build();
+        return fileDownloader.downloadFile(clientInfo.getCdnHost(), interpolatedPath, stcFileName, uriFunction);
     }
 
 }

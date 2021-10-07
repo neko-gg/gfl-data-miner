@@ -1,5 +1,6 @@
 package gg.neko.gfl.gfldataminer.service.web;
 
+import gg.neko.gfl.gfldataminer.config.WebConfig;
 import gg.neko.gfl.gfldataminer.error.FileException;
 import gg.neko.gfl.gfldataminer.service.reactor.SchedulerProvider;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,7 @@ import reactor.core.publisher.Mono;
 import java.io.File;
 import java.net.URI;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.text.MessageFormat;
 import java.util.function.Function;
@@ -25,6 +27,7 @@ import java.util.function.Function;
 public class FileDownloader {
 
     private final SchedulerProvider schedulerProvider;
+    private final WebConfig webConfig;
 
     public Mono<File> downloadFile(WebClient webClient, Function<UriBuilder, URI> uriFunction, Path destination) {
         log.info("downloading file in {}", destination);
@@ -44,6 +47,16 @@ public class FileDownloader {
                               .publishOn(schedulerProvider.defaultScheduler())
                               .then(Mono.just(destination))
                               .map(Path::toFile);
+    }
+
+    public Mono<File> downloadFile(String host, String path, String filename, Function<UriBuilder, URI> uriFunction) {
+        Path destination = Paths.get(path, filename);
+
+        WebClient webClient = WebClient.builder()
+                                       .baseUrl(host)
+                                       .build();
+
+        return downloadFile(webClient, uriFunction, destination);
     }
 
 }

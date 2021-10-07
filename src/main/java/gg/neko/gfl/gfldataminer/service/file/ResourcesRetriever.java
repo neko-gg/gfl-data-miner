@@ -6,6 +6,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.util.Arrays;
@@ -24,6 +25,11 @@ public class ResourcesRetriever {
                                                  .getResources(resourcesPath))
                      .map(ResourcesRetriever::getFileFromResource)
                      .collect(Collectors.toList());
+    }
+
+    @SneakyThrows
+    public File getResource(String resourcesPath) {
+        return ResourceUtils.getFile(resourcesPath);
     }
 
     @SneakyThrows

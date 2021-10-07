@@ -7,5 +7,6 @@ public class ClientInfo {
     private String region;
     private String gameHost;
     private String cdnHost;
+    private String assetHost;
     private String dumpVersion;
 }

@@ -17,24 +17,29 @@ web:
     version-path: /Index/version
   cdn:
     base-path: /data
+  latest-versions-url: https://raw.githubusercontent.com/neko-gg/gfl-data/senpai/latest-versions.json
 
 client:
   clients:
     - region: us
       game-host: http://gf-game.sunborngame.com
       cdn-host: http://gfus-cdn.sunborngame.com
+      asset-host: http://gfus-cdn.sunborngame.com
       dump-version: 20702
     - region: jp
       game-host: http://gfjp-game.sunborngame.com
       cdn-host: http://gfjp-cdn.sunborngame.com
+      asset-host: http://gfjp-cdn.sunborngame.com
       dump-version: 20701
     - region: kr
       game-host: http://gf-game.girlfrontline.co.kr
       cdn-host: http://gfkrcdn.imtxwy.com
+      asset-host: http://sn-list.girlfrontline.co.kr
       dump-version: 20801
     - region: tw
       game-host: http://sn-game.txwy.tw
       cdn-host: http://sncdn.imtxwy.com
+      asset-host: http://sn-list.txwy.tw
       dump-version: 20801
 
 file:
@@ -43,6 +48,8 @@ file:
   output-path: ${file.base-path}/out
   json:
     extension: .json
+  python:
+    executable: python
   stc:
     path: ${file.base-path}/${dollar-sign}{region}/stc
     extract-path: ${file.base-path}/${dollar-sign}{region}/stc/extract
@@ -54,6 +61,41 @@ file:
     skip:
       - 5122.stc
       - 5123.stc
+  asset:
+    key: kxwL8X2+fgM=
+    iv: M9lp+7j2Jdwqr+Yj1h+A
+    asset-extractor-path: ${file.base-path}/asset_extractor.py
+    asset-extractor-resource-path: classpath:asset_extractor.py
+    path: ${file.base-path}/${dollar-sign}{region}/asset
+    output-path: ${file.output-path}/${dollar-sign}{region}/asset
+    res-data-resource-path: ${file.asset.path}/res-data
+    res-data-extracted-path: ${file.asset.res-data-resource-path}/assets/resources/resdata.asset
+    res-data-output-path: ${file.asset.output-path}/res-data${file.json.extension}
+    extension: .dat
+    lua:
+      input-extension: .lua.txt
+      output-extension: .lua
+      encryption-key: lvbb3zfc3faa8mq1rx0r0gl61b4338fa
+    asset-bundles:
+      generic-asset-bundle:
+        asset-configs:
+          - asset-name: asset_textavg
+            asset-path: ${file.asset.path}/asset-textavg
+            asset-extracted-name: asset_textavg.ab
+            asset-resources-path: ${file.asset.path}/asset-textavg/assets/resources/dabao/avgtxt
+            asset-output-path: ${file.asset.output-path}/asset-textavg
+          - asset-name: asset_texttable
+            asset-path: ${file.asset.path}/asset-texttable
+            asset-extracted-name: asset_texttable.ab
+            asset-resources-path: ${file.asset.path}/asset-texttable/assets/resources/dabao/table
+            asset-output-path: ${file.asset.output-path}/asset-texttable
+      asset-textes:
+        asset-config:
+          asset-name: asset_textes
+          asset-path: ${file.asset.path}/asset-textes
+          asset-extracted-name: asset_textes.ab
+          asset-resources-path: ${file.asset.path}/asset-textes/assets/resources/dabao
+          asset-output-path: ${file.asset.output-path}/asset-textes
   dump-data-version-path: ${file.output-path}/latest-versions${file.json.extension}
 
 git:

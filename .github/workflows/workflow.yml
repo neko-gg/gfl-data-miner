@@ -16,6 +16,12 @@ jobs:
           java-version: '16'
           distribution: 'adopt'
           cache: maven
+      - name: Setup Python
+        uses: actions/setup-python@v2.2.2
+        with:
+          python-version: '3.8'
+      - name: Install Python dependencies
+        run: pip install -Iv UnityPy==1.7.13
       - name: Build with Maven
         run: mvn clean install -B
       - name: Run Spring Boot application

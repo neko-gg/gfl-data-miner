@@ -18,7 +18,7 @@ public class ZipFileExtractor {
     private final BlockingWrapper blockingWrapper;
 
     public Mono<File> extractZipFile(File source, File destination) {
-        log.info("extracting zip file in {}", destination);
+        log.info("extracting .zip file {} into {}", source, destination);
         return blockingWrapper.wrapBlockingCall(() -> this.blockingExtractZipFile(source, destination));
     }
 
