@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.List;
 
 @Component
@@ -21,7 +22,7 @@ public class DumpDataVersionWriter {
     public File writeDumpDataVersion(List<DumpDataVersion> dataVersions) {
         Path dumpDataVersionPath = Paths.get(fileConfig.getDumpDataVersionPath());
         File dumpDataVersionFile = dumpDataVersionPath.toFile();
-        return jsonMapper.toJsonFile(dumpDataVersionFile, dataVersions);
+        return jsonMapper.toJsonFile(dumpDataVersionFile, dataVersions.stream().sorted(Comparator.comparing(DumpDataVersion::getRegion)).toList());
     }
 
 }
