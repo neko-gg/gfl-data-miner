@@ -29,6 +29,7 @@
         "extra_ammo_mre",
         "conflict_type",
         "priority",
-        "carry_mission_skill"
+        "carry_mission_skill",
+        "sangvis_chip_id"
     ]
 }

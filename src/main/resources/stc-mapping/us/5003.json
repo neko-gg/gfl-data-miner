@@ -9,6 +9,7 @@
         "level",
         "number",
         "is_advance",
-        "def_percent"
+        "def_percent",
+        "batch"
     ]
 }

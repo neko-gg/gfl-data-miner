@@ -4,6 +4,7 @@
         "id",
         "type",
         "special_spot_condition",
-        "mission_buff_condition"
+        "mission_buff_condition",
+        "person_condition"
     ]
 }

@@ -25,7 +25,7 @@ client:
       game-host: http://gf-game.sunborngame.com
       cdn-host: http://gfus-cdn.sunborngame.com
       asset-host: http://gfus-cdn.sunborngame.com
-      dump-version: 20702
+      dump-version: 20800
     - region: jp
       game-host: http://gfjp-game.sunborngame.com
       cdn-host: http://gfjp-cdn.sunborngame.com

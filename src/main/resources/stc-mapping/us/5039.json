@@ -3,8 +3,8 @@
     "fields": [
         "mission_id",
         "team_effect",
-        "team_count",
         "month_team_count",
+        "team_count",
         "mp",
         "ammo",
         "mre",

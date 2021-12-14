@@ -21,10 +21,14 @@
         "type",
         "is_active",
         "price",
+        "sell_price",
         "experience",
         "init_time",
         "fit_gun_type",
         "custom_type",
-        "show_ui"
+        "show_ui",
+        "log_description",
+        "ai_skill",
+        "cutin_animation_duration"
     ]
 }

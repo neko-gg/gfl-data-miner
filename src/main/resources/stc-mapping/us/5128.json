@@ -4,6 +4,8 @@
         "id",
         "group",
         "content",
-        "paras"
+        "paras",
+        "type",
+        "type_name"
     ]
 }

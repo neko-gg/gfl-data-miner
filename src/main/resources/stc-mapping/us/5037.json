@@ -16,6 +16,7 @@
         "is_hurt",
         "level",
         "is_interrupt",
-        "delay"
+        "delay",
+        "next_motions"
     ]
 }

@@ -22,6 +22,7 @@
         "trigger_creation_delay",
         "creation_type",
         "sound_order",
-        "sound_delay"
+        "sound_delay",
+        "creation_direction"
     ]
 }

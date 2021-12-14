@@ -81,6 +81,7 @@
         "win_step",
         "event_score",
         "score_prize",
-        "drop_key_info"
+        "drop_key_info",
+        "lose_type"
     ]
 }
