@@ -53,18 +53,14 @@ public class AssetProcessorHelper {
 
         return Mono.just(MessageFormat.format("{0}{1}", assetResourceName, fileConfig.getAsset().getExtension()))
                    .flatMap(resFileName -> fileDownloader.downloadFile(resourcesUrl, interpolatedPath, resFileName, uriBuilder -> uriBuilder.path(resFileName).build()))
-                   .flatMap(downloadedFile -> zipFileExtractor.extractZipFile(downloadedFile, outputDirectory))
-                   .flatMap(downloadedFile -> processZippedAsset(clientInfo, downloadedFile, outputDirectory, assetBundleFileConfig))
+                   .flatMap(downloadedFile -> processAssetBundle(clientInfo, downloadedFile, outputDirectory, assetBundleFileConfig))
                    .subscribeOn(schedulerProvider.defaultScheduler());
     }
 
-    private Mono<ProcessedFileResult> processZippedAsset(ClientInfo clientInfo, File zippedAssetFile, File outputDirectory, FileConfig.AssetBundleFileConfig assetBundleFileConfig) {
+    private Mono<ProcessedFileResult> processAssetBundle(ClientInfo clientInfo, File assetBundleFile, File outputDirectory, FileConfig.AssetBundleFileConfig assetBundleFileConfig) {
         log.info("[{}] extracting {} asset bundle into {}", clientInfo.getRegion().toUpperCase(), assetBundleFileConfig.getAssetName(), outputDirectory);
 
-        return Mono.just(zippedAssetFile)
-                   .map(File::getAbsolutePath)
-                   .map(directoryPath -> Paths.get(directoryPath, assetBundleFileConfig.getAssetExtractedName()))
-                   .map(Path::toFile)
+        return Mono.just(assetBundleFile)
                    .flatMap(assetFile -> assetExtractor.extract(clientInfo, assetFile, outputDirectory))
                    .map(__ -> stringInterpolator.interpolate(clientInfo, assetBundleFileConfig.getAssetResourcesPath()))
                    .map(Paths::get)
@@ -72,7 +68,7 @@ public class AssetProcessorHelper {
                    .map(resourcesDirectory -> moveDirectoryContentToDirectory(resourcesDirectory, getAssetOutputPath(clientInfo, assetBundleFileConfig)))
                    .flatMapMany(assetOutputDirectory -> Flux.fromIterable(FileUtils.listFiles(assetOutputDirectory, null, true)))
                    .collectList()
-                   .map(outputFiles -> ProcessedFileResult.builder().inputFile(zippedAssetFile).outputFiles(outputFiles).build())
+                   .map(outputFiles -> ProcessedFileResult.builder().inputFile(assetBundleFile).outputFiles(outputFiles).build())
                    .subscribeOn(schedulerProvider.defaultScheduler());
     }
 

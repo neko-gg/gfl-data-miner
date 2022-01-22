@@ -71,7 +71,7 @@ file:
     res-data-resource-path: ${file.asset.path}/res-data
     res-data-extracted-path: ${file.asset.res-data-resource-path}/assets/resources/resdata.asset
     res-data-output-path: ${file.asset.output-path}/res-data${file.json.extension}
-    extension: .dat
+    extension: .ab
     lua:
       input-extension: .lua.txt
       output-extension: .lua
