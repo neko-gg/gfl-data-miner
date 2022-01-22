@@ -11,6 +11,7 @@
         "ssoc_number",
         "hoc_number",
         "spare_gun_num",
-        "spare_sangvis_cost"
+        "spare_sangvis_cost",
+        "spare_fairy_num"
     ]
 }

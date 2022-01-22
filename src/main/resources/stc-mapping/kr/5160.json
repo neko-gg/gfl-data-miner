@@ -5,6 +5,7 @@
         "name",
         "category",
         "code",
+        "fit_gun_type",
         "des"
     ]
 }

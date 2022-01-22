@@ -19,6 +19,8 @@
         "team_confrontfun_pic",
         "team_confrontfun_des",
         "effect_ext",
-        "targettrain_cancollect"
+        "targettrain_cancollect",
+        "fight_type",
+        "type_coef"
     ]
 }

@@ -82,6 +82,8 @@
         "event_score",
         "score_prize",
         "drop_key_info",
-        "lose_type"
+        "lose_type",
+        "fight_environment_group",
+        "environment_transform_config"
     ]
 }

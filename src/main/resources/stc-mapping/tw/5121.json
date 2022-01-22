@@ -16,6 +16,7 @@
         "visable_count",
         "rank_list_num",
         "begin_show_time",
-        "end_show_time"
+        "end_show_time",
+        "prize_preview"
     ]
 }

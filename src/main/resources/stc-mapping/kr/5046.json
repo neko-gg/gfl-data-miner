@@ -36,6 +36,9 @@
         "allyteam_summoner",
         "ap_cost",
         "consumption_item",
-        "drop_item"
+        "drop_item",
+        "fun_game_type",
+        "fun_game_name",
+        "fun_game_result_sub"
     ]
 }

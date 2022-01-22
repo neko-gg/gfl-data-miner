@@ -35,6 +35,7 @@
         "is_hp_showed",
         "is_damage_showed",
         "is_damage_source",
-        "is_sangvis"
+        "is_sangvis",
+        "phase_duration"
     ]
 }

@@ -17,6 +17,7 @@
         "level",
         "is_interrupt",
         "delay",
-        "next_motions"
+        "next_motions",
+        "voice_code"
     ]
 }

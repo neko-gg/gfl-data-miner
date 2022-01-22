@@ -49,6 +49,9 @@
         "passive_skill",
         "max_level",
         "auto_select_id",
-        "equip_group_id"
+        "equip_group_id",
+        "is_addition",
+        "is_show",
+        "obtain_ids"
     ]
 }

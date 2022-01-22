@@ -24,6 +24,7 @@
         "prize_id",
         "mission_id",
         "condition",
-        "commander_title"
+        "commander_title",
+        "unlock_function"
     ]
 }

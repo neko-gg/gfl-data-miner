@@ -35,12 +35,12 @@ client:
       game-host: http://gf-game.girlfrontline.co.kr
       cdn-host: http://gfkrcdn.imtxwy.com
       asset-host: http://sn-list.girlfrontline.co.kr
-      dump-version: 20801
+      dump-version: 20900
     - region: tw
       game-host: http://sn-game.txwy.tw
       cdn-host: http://sncdn.imtxwy.com
       asset-host: http://sn-list.txwy.tw
-      dump-version: 20801
+      dump-version: 20900
 
 file:
   charset: UTF-8

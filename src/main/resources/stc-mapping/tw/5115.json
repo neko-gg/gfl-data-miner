@@ -35,6 +35,7 @@
         "picture_offset",
         "picture_scale",
         "launch_time",
-        "org_id"
+        "org_id",
+        "obtain_ids"
     ]
 }

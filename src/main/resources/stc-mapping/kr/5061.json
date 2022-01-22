@@ -25,6 +25,8 @@
         "is_special_ai",
         "no_battle_damage",
         "duration",
-        "sangvis"
+        "sangvis",
+        "betray_result_guns",
+        "betray_result_sangvis"
     ]
 }
