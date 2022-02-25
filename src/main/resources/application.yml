@@ -30,7 +30,7 @@ client:
       game-host: http://gfjp-game.sunborngame.com
       cdn-host: http://gfjp-cdn.sunborngame.com
       asset-host: http://gfjp-cdn.sunborngame.com
-      dump-version: 20701
+      dump-version: 20800
     - region: kr
       game-host: http://gf-game.girlfrontline.co.kr
       cdn-host: http://gfkrcdn.imtxwy.com

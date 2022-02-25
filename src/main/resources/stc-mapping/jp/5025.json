@@ -36,6 +36,7 @@
         "hit_point",
         "offset",
         "lifebar_offset",
-        "enemy_illustration_id"
+        "enemy_illustration_id",
+        "location_offset"
     ]
 }

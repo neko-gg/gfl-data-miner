@@ -12,6 +12,7 @@
         "parameter",
         "trigger_creation_id",
         "creation_id",
-        "available_gun_type"
+        "available_gun_type",
+        "ui_control"
     ]
 }

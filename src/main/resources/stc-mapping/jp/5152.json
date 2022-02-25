@@ -6,6 +6,7 @@
         "code",
         "score_floor",
         "score_ceilling",
-        "score_get"
+        "score_get",
+        "prize"
     ]
 }

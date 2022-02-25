@@ -16,6 +16,8 @@
         "quota_num",
         "prize_id",
         "classification_id",
-        "description"
+        "description",
+        "clear_type",
+        "clear_parameter"
     ]
 }

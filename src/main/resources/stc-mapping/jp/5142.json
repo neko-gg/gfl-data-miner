@@ -13,6 +13,8 @@
         "armor_piercing",
         "reward_chip_ids",
         "chip",
-        "spine_direction"
+        "spine_direction",
+        "attack_angle",
+        "lifebar_offset"
     ]
 }
